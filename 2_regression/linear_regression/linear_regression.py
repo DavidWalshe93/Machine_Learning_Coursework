@@ -5,8 +5,12 @@ Date:           19/03/2020
 
 # Import libraries
 import numpy as np
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 import pandas as pd
+
+# Change default output resolutuon of plt.show() to 1920x1440
+mpl.rcParams['figure.dpi'] = 300
 
 # import dataset
 # ==============
@@ -55,4 +59,3 @@ plt.plot(x_train, regressor.predict(x_train), color="blue")
 plt.title("Salary vs Experience (Test Set)")
 plt.xlabel("Years of Experience")
 plt.ylabel("Salary")
-plt.show()
