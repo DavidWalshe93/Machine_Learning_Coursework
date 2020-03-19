@@ -14,7 +14,7 @@ dataset = pd.read_csv("./1_data_preprocessing/Data.csv")
 # Select all rows, select all columns except the last.
 x = dataset.iloc[:, :-1].values
 # Select all rows, select only the 4th column.
-y = dataset.iloc[:, 3].values
+y = dataset.iloc[:, 3].values.reshape(-1, 1)
 
 # Takes care of missing data.
 from sklearn.impute import SimpleImputer
@@ -54,4 +54,8 @@ ct = ColumnTransformer(
     remainder="passthrough"
 )
 
-x = np.array(ct.fit_transform(x), dtype=np.float)
+# Convert X[:, 0] categories to binary encoding.
+x = np.array(ct.fit_transform(x), dtype=np.int32)
+# Convert Y category (Yes/No) to binary encoding.
+y = np.array(ct.fit_transform(y), dtype=np.int32)
+
