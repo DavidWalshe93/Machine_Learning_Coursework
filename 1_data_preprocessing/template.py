@@ -8,3 +8,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 
+# import dataset
+dataset = pd.read_csv("./1_data_preprocessing/Data.csv")
+
+# Select all rows, select all columns except the last.
+x = dataset.iloc[:, :-1].values
