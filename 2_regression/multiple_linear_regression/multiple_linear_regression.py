@@ -34,6 +34,10 @@ ct = ColumnTransformer(
 # Run the transformer on X.
 x = np.array(ct.fit_transform(x), dtype=np.float64)
 
+# Avoid the dummy variable trap
+# =============================
+x = x[:, 1:]
+
 # Split training and test sets
 # ============================
 from sklearn.model_selection import train_test_split
@@ -59,3 +63,55 @@ import statsmodels.formula.api as sm
 # Add an array of ones to the start of X to account for constant, C0 in multiple linear regression equation.
 # Y = C0 + C1*X1 + C2*X2 + ... + Cn*Xn
 x = np.append(arr=np.ones((50, 1)).astype(int), values=x, axis=1)
+
+# Decide a significance level.
+sig_level = 0.05
+
+
+# Phase 1
+# =======
+# The initial optimised table of features.
+x_opt = x[:, [0, 1, 2, 3, 4, 5]]
+
+# Ordinarily Least Squares Regressor.
+regressor_OLS = sm.OLS(endog=y, exog=x_opt).fit()
+# regressor_OLS.summary()
+
+
+# Phase 2
+# =======
+# Removed least significant P-value [2] found in Phase 1.
+x_opt = x[:, [0, 1, 3, 4, 5]]
+
+# Ordinarily Least Squares Regressor.
+regressor_OLS = sm.OLS(endog=y, exog=x_opt).fit()
+regressor_OLS.summary()
+
+
+# Phase 3
+# =======
+# Removed least significant P-value [1] found in Phase 1.
+x_opt = x[:, [0, 3, 4, 5]]
+
+# Ordinarily Least Squares Regressor.
+regressor_OLS = sm.OLS(endog=y, exog=x_opt).fit()
+regressor_OLS.summary()
+
+
+# Phase 4
+# =======
+# Removed least significant P-value [4] found in Phase 1.
+x_opt = x[:, [0, 3, 5]]
+
+# Ordinarily Least Squares Regressor.
+regressor_OLS = sm.OLS(endog=y, exog=x_opt).fit()
+regressor_OLS.summary()
+
+# Phase 5
+# =======
+# Removed least significant P-value [5] found in Phase 1.
+x_opt = x[:, [0, 3]]
+
+# Ordinarily Least Squares Regressor.
+regressor_OLS = sm.OLS(endog=y, exog=x_opt).fit()
+regressor_OLS.summary()
