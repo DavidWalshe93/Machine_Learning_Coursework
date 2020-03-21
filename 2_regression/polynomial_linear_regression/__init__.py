@@ -70,7 +70,9 @@ plt.show()
 
 
 # Predicting a new result with Linear Regression
+# ==============================================
 print(f"Linear Regression Results:\t\t{lin_reg.predict([[6.5]])}")
 
 # Predicting a new result with Polynomial Regression
+# ==================================================
 print(f"Polynomial Regression Results:\t{lin_reg_poly.predict(poly_reg.fit_transform([[6.5]]))}")
