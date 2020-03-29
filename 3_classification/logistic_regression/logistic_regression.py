@@ -69,7 +69,7 @@ for i, j in enumerate(np.unique(y_set)):
 
 plt.title("Logistic Regression (Training set)")
 plt.xlabel("Age")
-plt.ylabel("Estimated")
+plt.ylabel("Estimated Salary")
 plt.legend()
 plt.show()
 
@@ -92,6 +92,6 @@ for i, j in enumerate(np.unique(y_set)):
 
 plt.title("Logistic Regression (Test set)")
 plt.xlabel("Age")
-plt.ylabel("Estimated")
+plt.ylabel("Estimated Salary")
 plt.legend()
 plt.show()
