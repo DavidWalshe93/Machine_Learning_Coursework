@@ -1,11 +1,6 @@
 """
 Author:         David Walshe
-Date:           23/03/2020   
-"""
-
-"""
-Author:         David Walshe
-Date:           23/03/2020   
+Date:           02/04/2020   
 """
 
 # Import libraries
@@ -42,10 +37,11 @@ X_train = sc_X.fit_transform(X_train)
 X_test = sc_X.transform(X_test)
 
 
-#
+# Fitting classifier to the Training Set
 # ===============================================
-
-classifier = None
+from sklearn.svm import SVC
+classifier = SVC(kernel="rbf", random_state=0, gamma=0.7)
+classifier.fit(X_train, y_train)
 
 
 # Predicting the Test set results
@@ -57,6 +53,37 @@ y_pred = classifier.predict(X_test).reshape(-1, 1)
 # ===========================
 from sklearn.metrics import confusion_matrix
 cm = confusion_matrix(y_test, y_pred)
+
+
+# Applying K-Fold Cross Validation
+# ================================
+from sklearn.model_selection import cross_val_score
+accuracies = cross_val_score(estimator=classifier, X=X_train, y=y_train, cv=10, n_jobs=-1).reshape(-1, 1)
+mean = accuracies.mean()
+variance = accuracies.std()
+
+# Applying Grid search to find the best model and the best parameters
+# ===================================================================
+from sklearn.model_selection import GridSearchCV
+parameters = [
+    {
+        "C": [1, 10, 100, 1000],
+        "kernel": ["linear"]
+    },
+    {
+        "C": [1, 10, 100, 1000],
+        "kernel": ["rbf"],
+        "gamma": [x/10 for x in range(1, 10, 1)]
+    }
+]
+grid_search = GridSearchCV(estimator=classifier,
+                           param_grid=parameters,
+                           scoring="accuracy",
+                           cv=10,
+                           n_jobs=-1)
+grid_search = grid_search.fit(X_train, y_train)
+best_score = grid_search.best_score_
+best_parameters = grid_search.best_params_
 
 
 # Visualising the training set results
@@ -76,7 +103,7 @@ for i, j in enumerate(np.unique(y_set)):
     plt.scatter(X_set[y_set == j, 0], X_set[y_set == j, 1],
                 c=ListedColormap(("blue", "orange"))(i), label=j)
 
-plt.title("Logistic Regression (Training set)")
+plt.title("Kernel SVM (Training set)")
 plt.xlabel("Age")
 plt.ylabel("Estimated Salary")
 plt.legend()
@@ -100,9 +127,8 @@ for i, j in enumerate(np.unique(y_set)):
     plt.scatter(X_set[y_set == j, 0], X_set[y_set == j, 1],
                 c=ListedColormap(("blue", "orange"))(i), label=j)
 
-plt.title("Logistic Regression (Test set)")
+plt.title("Kernel SVM (Test set)")
 plt.xlabel("Age")
 plt.ylabel("Estimated Salary")
 plt.legend()
 plt.show()
-

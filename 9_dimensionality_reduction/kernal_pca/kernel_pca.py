@@ -1,11 +1,7 @@
 """
 Author:         David Walshe
-Date:           23/03/2020   
-"""
-
-"""
-Author:         David Walshe
-Date:           23/03/2020   
+Date:           05/04/2020
+Desc:           Kernel Principle Component Analysis
 """
 
 # Import libraries
@@ -19,10 +15,9 @@ mpl.rcParams['figure.dpi'] = 300
 
 # import dataset
 # ==============
-dataset = pd.read_csv("Social_Network_Ads.csv")
+dataset = pd.read_csv("3_classification/logistic_regression/Social_Network_Ads.csv")
 X = dataset.iloc[:, [2, 3]].values
 y = dataset.iloc[:, 4].values.reshape(-1, 1)
-
 
 # Splitting the dataset into a training set and a test set
 # ========================================================
@@ -32,7 +27,6 @@ X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=.25, random_state=0
 )
 
-
 # Feature Scaling
 # ===============
 from sklearn.preprocessing import StandardScaler
@@ -41,26 +35,32 @@ sc_X = StandardScaler()
 X_train = sc_X.fit_transform(X_train)
 X_test = sc_X.transform(X_test)
 
+# Applying Kernel PCA
+# ===================
+from sklearn.decomposition import KernelPCA
 
-#
+k_pca = KernelPCA(n_components=2, kernel="rbf")
+X_train = k_pca.fit_transform(X_train)
+X_test = k_pca.transform(X_test)
+
+# # Fitting Logistic Regression to the Training set
 # ===============================================
+from sklearn.linear_model import LogisticRegression
 
-classifier = None
-
+classifier = LogisticRegression(random_state=0)
+classifier.fit(X_train, y_train)
 
 # Predicting the Test set results
 # ===============================
 y_pred = classifier.predict(X_test).reshape(-1, 1)
 
-
 # Making the Confusion Matrix
 # ===========================
 from sklearn.metrics import confusion_matrix
+
 cm = confusion_matrix(y_test, y_pred)
 
-
 # Visualising the training set results
-# ====================================
 from matplotlib.colors import ListedColormap
 
 X_set, y_set = X_train, y_train
@@ -84,7 +84,6 @@ plt.show()
 
 
 # Visualising the test set results
-# ================================
 from matplotlib.colors import ListedColormap
 
 X_set, y_set = X_test, y_test
@@ -105,4 +104,3 @@ plt.xlabel("Age")
 plt.ylabel("Estimated Salary")
 plt.legend()
 plt.show()
-

@@ -1,11 +1,6 @@
 """
 Author:         David Walshe
-Date:           23/03/2020   
-"""
-
-"""
-Author:         David Walshe
-Date:           23/03/2020   
+Date:           01/04/2020   
 """
 
 # Import libraries
@@ -44,8 +39,9 @@ X_test = sc_X.transform(X_test)
 
 #
 # ===============================================
-
-classifier = None
+from sklearn.ensemble import RandomForestClassifier
+classifier = RandomForestClassifier(n_estimators=500, criterion="entropy", random_state=0)
+classifier.fit(X_train, y_train)
 
 
 # Predicting the Test set results
@@ -76,7 +72,7 @@ for i, j in enumerate(np.unique(y_set)):
     plt.scatter(X_set[y_set == j, 0], X_set[y_set == j, 1],
                 c=ListedColormap(("blue", "orange"))(i), label=j)
 
-plt.title("Logistic Regression (Training set)")
+plt.title("Random Forest (Training set)")
 plt.xlabel("Age")
 plt.ylabel("Estimated Salary")
 plt.legend()
@@ -100,9 +96,8 @@ for i, j in enumerate(np.unique(y_set)):
     plt.scatter(X_set[y_set == j, 0], X_set[y_set == j, 1],
                 c=ListedColormap(("blue", "orange"))(i), label=j)
 
-plt.title("Logistic Regression (Test set)")
+plt.title("Random Forest (Test set)")
 plt.xlabel("Age")
 plt.ylabel("Estimated Salary")
 plt.legend()
 plt.show()
-

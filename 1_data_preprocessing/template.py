@@ -10,7 +10,7 @@ import pandas as pd
 
 # import dataset
 # ==============
-dataset = pd.read_csv("./1_data_preprocessing/Data.csv")
+dataset = pd.read_csv("Data.csv")
 # Select all rows, select all columns except the last.
 x = dataset.iloc[:, :-1].values
 # Select all rows, select only the 4th column.
@@ -52,6 +52,8 @@ ct = ColumnTransformer(
     [("one_hot_encoder", OneHotEncoder(), [0])],
     remainder="passthrough"
 )
+
+print(type(ct.fit_transform(x)))
 
 # Convert X[:, 0] categories to binary encoding.
 x = np.array(ct.fit_transform(x), dtype=np.int32)
